@@ -41,22 +41,34 @@ Theta_grad = zeros(size(Theta));
 %
 
 
+Err = (X * Theta' - Y);         % compute the error of given data.
+
+Err_sqr = Err .^ 2;
+
+J = Err_sqr(R == 1);            % pick up the indices of R(i,j) == 1 correspond to Err. 
+
+% J = 1/2 * sum(J(:));            % the sum of cost funciton.
+J = sum(J(:)) +  lambda * sum(X(:).^2) + lambda * sum(Theta(:).^2);               % the regularization term.
+
+J = 1/2 * J;
 
 
+Err_eli = Err .* R;             % eliminate those elements which equal to 0 in the matrix R.
 
 
+%% the non regularized part
+% X_grad = Err_eli * Theta;
+% 
+% Theta_grad = Err_eli' * X;
+%% reuglarization part 
 
+X_grad = Err_eli * Theta + lambda * X;
 
-
-
-
-
-
-
-
+Theta_grad = Err_eli' * X + lambda * Theta;
 
 % =============================================================
 
 grad = [X_grad(:); Theta_grad(:)];
+
 
 end
